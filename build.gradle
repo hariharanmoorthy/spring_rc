@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group = 'com.hari'
+
+compileJava {
+    options.compilerArgs << '-parameters'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework:spring-webmvc:7.0.8'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
+    implementation 'org.postgresql:postgresql:42.7.3'
+    implementation 'com.zaxxer:HikariCP:6.3.0'
+    implementation 'org.flywaydb:flyway-core:11.10.3'
+    implementation 'org.flywaydb:flyway-database-postgresql:11.10.3'
+    providedCompile 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+
+}

@@ -1,0 +1,30 @@
+# ── Podman/Docker build context ignore ────────────────────────
+# Prevents these from being sent to the build daemon.
+# Keeps build context small = FASTER builds.
+
+# Git
+.git/
+.gitignore
+
+# Gradle local cache (NEVER copy this — it's your local machine's cache)
+.gradle/
+build/
+# Allow the compiled WAR to reach the build daemon
+!build/libs/*.war
+
+# IDE files
+.idea/
+*.iml
+*.iws
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Docs & scripts not needed in container
+*.md
+README*
+gradle/scripts/
+
+# Test reports
+test-results/
