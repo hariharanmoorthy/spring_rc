@@ -8,9 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class LoadBalancerApplication {
     public static void main(String[] args) {
-
         SpringApplication.run(LoadBalancerApplication.class, args);
-
     }
 }
 

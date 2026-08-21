@@ -22,15 +22,6 @@ public class TokenBucket {
         this.lastRefillTimestampNanos = System.nanoTime();
     }
 
-    public synchronized boolean tryConsume() {
-        refill();
-        if (availableTokens >= 1.0) {
-            availableTokens -= 1.0;
-            return true;
-        }
-        return false;
-    }
-
     public synchronized long[] tryConsumeAndGetRemaining() {
         refill();
         boolean consumed = availableTokens >= 1.0;
@@ -38,11 +29,6 @@ public class TokenBucket {
             availableTokens -= 1.0;
         }
         return new long[]{consumed ? 1L : 0L, (long) availableTokens};
-    }
-
-    public synchronized long getAvailableTokens() {
-        refill();
-        return (long) availableTokens;
     }
 
     private void refill() {

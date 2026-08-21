@@ -55,7 +55,6 @@ public class LoadBalancerController {
 
         RateLimiterService.RateLimitDecision decision = rateLimiterService.checkLimit(clientKey);
         HttpHeaders rateLimitHeaders = buildRateLimitHeaders(decision);
-        System.out.println("checking value"+ decision.remainingTokens() + " allowed"+ decision.allowed());
 
 
         if (!decision.allowed()) {

@@ -58,10 +58,6 @@ public class RateLimiterService {
         }
     }
 
-    public int activeClientCount() {
-        return buckets.size();
-    }
-
     private static final class ClientBucket {
         private final TokenBucket bucket;
         private volatile long lastAccessMillis;
