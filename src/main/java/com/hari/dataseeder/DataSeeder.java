@@ -14,8 +14,6 @@ public class DataSeeder {
     public static void migrate() throws Exception {
         DataSource ds = RepoUtil.getDataSource();
 
-
-
         Flyway flyway = Flyway.configure()
                 .dataSource(ds)
                 .locations("classpath:db/migration")

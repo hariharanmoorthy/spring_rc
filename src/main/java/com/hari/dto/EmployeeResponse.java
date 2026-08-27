@@ -1,10 +1,5 @@
 package com.hari.dto;
 
-/**
- * Typed DTO returned for every employee response.
- * Using a concrete type instead of raw Map<String,Object>
- * improves serialisation control and IDE visibility.
- */
 public class EmployeeResponse {
 
     private int    id;

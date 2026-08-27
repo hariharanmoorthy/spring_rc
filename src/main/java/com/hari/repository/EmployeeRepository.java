@@ -12,10 +12,10 @@ import java.util.Optional;
 @Repository
 public class EmployeeRepository {
     private static final String FETCH_ALL =
-            "SELECT id, name, salary FROM employee ORDER BY id";
+            "SELECT e.id, e.name, e.salary, r.name as role_name FROM employee e left join role r on r.id=e.role_id ORDER BY e.id";
 
     private static final String FETCH_BY_ID =
-            "SELECT id, name, salary FROM employee WHERE id = ?";
+            "SELECT id, name, salary, role_id FROM employee WHERE id = ?";
 
     private static final String INSERT =
             "INSERT INTO employee (name, salary) VALUES (?, ?) RETURNING id, name, salary";
@@ -28,6 +28,20 @@ public class EmployeeRepository {
 
     private static final String EXISTS =
             "SELECT COUNT(*) AS cnt FROM employee WHERE id = ?";
+
+    private static final String ASSIGN_ROLE =
+            "UPDATE employee SET role_id = ? WHERE id = ? RETURNING id, name, salary, role_id";
+
+public void assignRole(int employeeId, int roleId) throws Exception {
+    try {
+        Map<String, Object> row = RepoUtil.executeQuery(ASSIGN_ROLE, roleId, employeeId);
+        if (row.isEmpty()) throw ExceptionUtil.notFound("Employee not found with ID: " + employeeId);
+    } catch (exception.AppException ae) {
+        throw ae;
+    } catch (Exception e) {
+        throw new RuntimeException("Error assigning role to employee in the database", e);
+    }
+}
 
     public List<Map<String, Object>> findAll() throws Exception {
         try {

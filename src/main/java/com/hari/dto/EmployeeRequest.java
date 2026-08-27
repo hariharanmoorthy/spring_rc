@@ -1,9 +1,5 @@
 package com.hari.dto;
 
-/**
- * Request body for create / update employee operations.
- * Validation is enforced at the service/repository layer.
- */
 public class EmployeeRequest {
 
     private String name;
@@ -11,7 +7,7 @@ public class EmployeeRequest {
 
     public EmployeeRequest() {}
 
-    public EmployeeRequest(String name, double salary) {
+    public EmployeeRequest(String name, double salary, int roleId) {
         this.name   = name;
         this.salary = salary;
     }

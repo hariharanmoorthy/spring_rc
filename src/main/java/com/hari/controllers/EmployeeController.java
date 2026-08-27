@@ -47,4 +47,13 @@ public class EmployeeController {
     public Map<String, Object> delete(@PathVariable int id) throws Exception {
         return employeeService.delete(id);
     }
+
+    @PutMapping(value = "/{employeeId}/assign-role")
+    public ResponseEntity<String> assignRole(@RequestBody AssignRoleRequest request) throws Exception {
+            employeeService.assignRole(request.employeeId(), request.roleId());
+            return ResponseEntity.ok("Role assigned successfully");
+    }
+
+    public record AssignRoleRequest(int employeeId, int roleId) {}
 }
+

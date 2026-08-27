@@ -47,6 +47,22 @@ services:
 #    networks:
 #      - app_network
 
+  redis:
+    image: redis:7-alpine
+    container_name: spring_rc_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
   loadbalancer:
     build:
       context: ./loadbalancer
@@ -57,13 +73,19 @@ services:
     environment:
       BACKEND_HOST: app
       BACKEND_PORT: 8080
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     depends_on:
-      - app
+      app:
+        condition: service_started
+      redis:
+        condition: service_healthy
     networks:
       - app_network
 
 volumes:
   postgres_data:
+  redis_data:
 
 networks:
   app_network:

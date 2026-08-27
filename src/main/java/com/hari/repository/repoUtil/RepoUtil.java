@@ -68,9 +68,7 @@ public final class RepoUtil {
         return Collections.emptyMap();
     }
 
-    /**
-     * Fetch all rows matching a SELECT query.
-     */
+
     public static List<Map<String, Object>> fetchQuery(String sql, Object... params) throws SQLException {
         List<Map<String, Object>> results = new ArrayList<>();
         try (Connection conn = DATA_SOURCE.getConnection();
@@ -83,9 +81,7 @@ public final class RepoUtil {
         return results;
     }
 
-    /**
-     * Fetch at most one row, returned as an {@code Optional}.
-     */
+
     public static Optional<Map<String, Object>> fetchOne(String sql, Object... params) throws SQLException {
         try (Connection conn = DATA_SOURCE.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -97,7 +93,6 @@ public final class RepoUtil {
         return Optional.empty();
     }
 
-    // ── Private helpers ──────────────────────────────────────────────────────
 
     private static void bind(PreparedStatement ps, Object[] params) throws SQLException {
         for (int i = 0; i < params.length; i++) {

@@ -122,6 +122,7 @@ public class LoadBalancerController {
 
     private HttpHeaders buildRateLimitHeaders(RateLimiterService.RateLimitDecision decision) {
         HttpHeaders headers = new HttpHeaders();
+        headers.set("X-RateLimit-Limitercheck", String.valueOf(decision.allowed()));
         headers.set("X-RateLimit-Limit", String.valueOf(decision.capacity()));
         headers.set("X-RateLimit-Remaining", String.valueOf(decision.remainingTokens()));
         return headers;
