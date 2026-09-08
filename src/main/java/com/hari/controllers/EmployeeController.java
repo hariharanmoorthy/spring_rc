@@ -51,7 +51,8 @@ public class EmployeeController {
     @PutMapping(value = "/{employeeId}/assign-role")
     public ResponseEntity<String> assignRole(@RequestBody AssignRoleRequest request) throws Exception {
             employeeService.assignRole(request.employeeId(), request.roleId());
-            return ResponseEntity.ok("Role assigned successfully");
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                    .body("Role assignment request queued for processing");
     }
 
     public record AssignRoleRequest(int employeeId, int roleId) {}
