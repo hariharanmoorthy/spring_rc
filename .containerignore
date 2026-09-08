@@ -16,6 +16,7 @@ build/
 .idea/
 *.iml
 *.iws
+.zcode/
 
 # OS junk
 .DS_Store

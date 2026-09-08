@@ -14,9 +14,11 @@ import java.util.Map;
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final RoleAssignmentProducer roleAssignmentProducer;
 
-    public EmployeeService(EmployeeRepository employeeRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, RoleAssignmentProducer roleAssignmentProducer) {
         this.employeeRepository = employeeRepository;
+        this.roleAssignmentProducer = roleAssignmentProducer;
     }
 
     public List<Map<String, Object>> getAll() throws Exception {
@@ -55,10 +57,33 @@ public class EmployeeService {
         if (roleId == null){
             throw ExceptionUtil.badRequest("Role ID cannot be null");
         }
-        Map employee = employeeRepository.findById(employeeId);
-        if (employee.get("role_id") != null) {
-            throw ExceptionUtil.badRequest("Employee already has a role assigned");
+
+        // Best-effort synchronous check so obviously-invalid requests (employee
+        // not found, or a role already assigned) are rejected immediately
+        // instead of always returning 202 and only failing silently later in
+        // the Kafka consumer. This is "fail open": if the DB read itself
+        // blows up (e.g. outage), we swallow that error and still queue the
+        // event, preserving the original guarantee that assignment requests
+        // are never lost even if the DB is temporarily down. The consumer
+        // still re-validates before writing, so this is just an optimization
+        // for the common case, not a replacement for that check.
+        try {
+            Map<String, Object> employee = employeeRepository.findById(employeeId);
+            if (employee.get("role_id") != null) {
+                throw ExceptionUtil.badRequest(
+                        "Employee " + employeeId + " already has a role assigned");
+            }
+        } catch (exception.AppException ae) {
+            // Genuine 404 (not found) or 400 (bad request, e.g. the check
+            // above) should be surfaced immediately; any other AppException
+            // (e.g. 500 wrapping a DB connectivity issue) is treated as
+            // "unknown" and falls through to queue the event.
+            if (ae.getStatus() == org.springframework.http.HttpStatus.NOT_FOUND
+                    || ae.getStatus() == org.springframework.http.HttpStatus.BAD_REQUEST) {
+                throw ae;
+            }
         }
-        employeeRepository.assignRole(employeeId, roleId);
+
+        roleAssignmentProducer.publish(employeeId, roleId);
     }
 }
