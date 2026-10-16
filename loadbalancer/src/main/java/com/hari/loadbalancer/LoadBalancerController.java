@@ -51,6 +51,7 @@ public class LoadBalancerController {
 
     @RequestMapping("/**")
     public ResponseEntity<String> forward(HttpServletRequest request, @RequestBody(required = false) String body) {
+
         String clientKey = resolveClientKey(request);
 
         RateLimiterService.RateLimitDecision decision = rateLimiterService.checkLimit(clientKey);
@@ -97,7 +98,6 @@ public class LoadBalancerController {
 
             rateLimitHeaders.set("X-Upstream-Server", backend);
             rateLimitHeaders.set("X-Round-Robin-Index", String.valueOf(index + 1));
-
             return new ResponseEntity<>(response.getBody(), rateLimitHeaders, response.getStatusCode());
         } catch (HttpStatusCodeException e) {
             rateLimitHeaders.set("X-Upstream-Server", backend);

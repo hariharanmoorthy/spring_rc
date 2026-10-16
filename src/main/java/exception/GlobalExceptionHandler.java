@@ -46,6 +46,11 @@ public class GlobalExceptionHandler {
         return build(500, "Internal Server Error", ex.getMessage());
     }
 
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<Map<String, Object>> handleThrowable(Throwable ex) {
+        return build(500, "Internal Server Error", ex.getMessage());
+    }
+
     private ResponseEntity<Map<String, Object>> build(int status, String error, String message) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("status",    status);

@@ -14,26 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Consumes role-assignment events and performs ALL DB-dependent work:
- * validating the employee exists / doesn't already have a role, and the
- * actual DB update. This is deliberate — the producer side (EmployeeService)
- * never touches the DB, so the API request succeeds even during a DB outage.
- *
- * Any transient exception thrown here (DB down, network blip, etc.)
- * propagates back to the Kafka container's error handler, which retries the
- * same message with a fixed backoff, indefinitely, until it succeeds. The
- * consumer offset is only committed after successful processing, so no
- * request is ever lost.
- *
- * IMPORTANT: {@link AppException} is used both for genuine business-rule
- * failures (404 not found, 409 conflict) AND for technical failures wrapped
- * by the repository layer (500, e.g. DB connection refused). Only the
- * former should stop retrying — a 500 caused by a DB outage must still be
- * retried indefinitely. We translate genuine business failures into
- * {@link NonRetryableAssignmentException}, which is the only type excluded
- * from retries (see {@code KafkaConfig}).
- */
+
 @Component
 public class RoleAssignmentConsumer {
 
@@ -54,7 +35,7 @@ public class RoleAssignmentConsumer {
             groupId = "employee-role-assignment-group",
             containerFactory = "kafkaListenerContainerFactory"
     )
-    public void onAssignRole(AssignRoleEvent event) throws Exception {
+    public void onAssignRole(AssignRoleEvent event) {
         log.info("Processing role assignment event {}: employee={}, role={}",
                 event.eventId(), event.employeeId(), event.roleId());
         try {
