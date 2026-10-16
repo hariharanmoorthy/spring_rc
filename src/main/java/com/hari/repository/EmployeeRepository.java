@@ -32,18 +32,18 @@ public class EmployeeRepository {
     private static final String ASSIGN_ROLE =
             "UPDATE employee SET role_id = ? WHERE id = ? RETURNING id, name, salary, role_id";
 
-public void assignRole(int employeeId, int roleId) throws Exception {
-    try {
-        Map<String, Object> row = RepoUtil.executeQuery(ASSIGN_ROLE, roleId, employeeId);
-        if (row.isEmpty()) throw ExceptionUtil.notFound("Employee not found with ID: " + employeeId);
-    } catch (exception.AppException ae) {
-        throw ae;
-    } catch (Exception e) {
-        throw new RuntimeException("Error assigning role to employee in the database", e);
+    public void assignRole(int employeeId, int roleId) {
+        try {
+            Map<String, Object> row = RepoUtil.executeQuery(ASSIGN_ROLE, roleId, employeeId);
+            if (row.isEmpty()) throw ExceptionUtil.notFound("Employee not found with ID: " + employeeId);
+        } catch (exception.AppException ae) {
+            throw ae;
+        } catch (Exception e) {
+            throw new RuntimeException("Error assigning role to employee in the database", e);
+        }
     }
-}
 
-    public List<Map<String, Object>> findAll() throws Exception {
+    public List<Map<String, Object>> findAll() {
         try {
             return RepoUtil.fetchQuery(FETCH_ALL);
         } catch (Exception e) {
@@ -51,7 +51,7 @@ public void assignRole(int employeeId, int roleId) throws Exception {
         }
     }
 
-    public Map<String, Object> findById(int id) throws Exception {
+    public Map<String, Object> findById(int id) {
         try {
             Optional<Map<String, Object>> row = RepoUtil.fetchOne(FETCH_BY_ID, id);
             return row.orElseThrow(() ->
@@ -63,7 +63,7 @@ public void assignRole(int employeeId, int roleId) throws Exception {
         }
     }
 
-    public Map<String, Object> create(EmployeeRequest req) throws Exception {
+    public Map<String, Object> create(EmployeeRequest req) {
         validateRequest(req);
         try {
             Map<String, Object> row = RepoUtil.executeQuery(INSERT, req.getName().trim(), req.getSalary());
@@ -76,7 +76,7 @@ public void assignRole(int employeeId, int roleId) throws Exception {
         }
     }
 
-    public Map<String, Object> update(int id, EmployeeRequest req) throws Exception {
+    public Map<String, Object> update(int id, EmployeeRequest req) {
         validateRequest(req);
         assertExists(id);
         try {
@@ -90,7 +90,7 @@ public void assignRole(int employeeId, int roleId) throws Exception {
         }
     }
 
-    public Map<String, Object> delete(int id) throws Exception {
+    public Map<String, Object> delete(int id) {
         assertExists(id);
         try {
             Map<String, Object> row = RepoUtil.executeQuery(DELETE, id);
@@ -103,7 +103,7 @@ public void assignRole(int employeeId, int roleId) throws Exception {
         }
     }
 
-    private void assertExists(int id) throws Exception {
+    private void assertExists(int id) {
         try {
             Map<String, Object> row = RepoUtil.executeQuery(EXISTS, id);
             Number count = (Number) row.get("cnt");
@@ -117,7 +117,7 @@ public void assignRole(int employeeId, int roleId) throws Exception {
         }
     }
 
-    private void validateRequest(EmployeeRequest req) throws Exception {
+    private void validateRequest(EmployeeRequest req) {
         if (req == null) {
             throw ExceptionUtil.badRequest("Request body must not be null");
         }

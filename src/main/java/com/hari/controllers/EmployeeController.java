@@ -21,30 +21,30 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<Map<String, Object>> getAll() throws Exception {
+    public List<Map<String, Object>> getAll() {
         return employeeService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Map<String, Object> getById(@PathVariable int id) throws Exception {
+    public Map<String, Object> getById(@PathVariable int id) {
         return employeeService.getById(id);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = "application/json")
-    public Map<String, Object> create(@RequestBody EmployeeRequest request) throws Exception {
+    public Map<String, Object> create(@RequestBody EmployeeRequest request) {
         return employeeService.create(request);
     }
 
     @PutMapping(value = "/{id}", consumes = "application/json")
     public Map<String, Object> update(
             @PathVariable int id,
-            @RequestBody EmployeeRequest request) throws Exception {
+            @RequestBody EmployeeRequest request) {
         return employeeService.update(id, request);
     }
 
     @DeleteMapping("/{id}")
-    public Map<String, Object> delete(@PathVariable int id) throws Exception {
+    public Map<String, Object> delete(@PathVariable int id) {
         return employeeService.delete(id);
     }
 

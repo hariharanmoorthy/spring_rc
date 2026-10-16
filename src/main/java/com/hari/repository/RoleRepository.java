@@ -20,7 +20,7 @@ public class RoleRepository {
         }
     }
 
-    public Map<String,Object> createRole(String roleName) throws Exception {
+    public Map<String,Object> createRole(String roleName) {
         try {
            return RepoUtil.executeQuery(InsertRole, roleName);
         } catch (Exception e) {

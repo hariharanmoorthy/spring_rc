@@ -23,8 +23,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    env_file:
-      - .env
     environment:
       DB_HOST: postgres
       DB_PORT: 5432

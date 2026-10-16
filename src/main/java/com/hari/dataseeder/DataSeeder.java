@@ -11,7 +11,7 @@ public class DataSeeder {
     private static final int MAX_RETRIES    = 20;
     private static final long RETRY_DELAY_MS = 3_000;
 
-    public static void migrate() throws Exception {
+    public static void migrate() {
         DataSource ds = RepoUtil.getDataSource();
 
         Flyway flyway = Flyway.configure()
